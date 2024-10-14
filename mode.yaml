@@ -1,0 +1,32 @@
+---
+- name: Run Docker Compose
+  hosts: all
+  become: yes
+
+  vars:
+    compose_file: /path/to/your/docker-compose.yml
+
+  tasks:
+    - name: Ensure Docker is installed
+      apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+    - name: Ensure Docker Compose is installed
+      pip:
+        name: docker-compose
+        state: present
+
+    - name: Run Docker Compose
+      community.docker.docker_compose:
+        project_src: "{{ compose_file }}"
+        state: present
+      notify:
+        - Restart Docker Compose
+
+  handlers:
+    - name: Restart Docker Compose
+      community.docker.docker_compose:
+        project_src: "{{ compose_file }}"
+        state: restarted

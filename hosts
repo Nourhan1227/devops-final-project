@@ -1,0 +1,2 @@
+[docker_server]
+35.173.243.119  ansible_ssh_private_key_file=/home/ghanem/Test0/Develop-with-docker/my-depi.pem ansible_user=ec2-user ansible_python_interpreter=/usr/bin/python3.9

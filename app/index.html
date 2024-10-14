@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevOps Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #00c6ff, #0072ff);
+            background-size: cover;
+        }
+        .container {
+            width: 400px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .header img {
+            border-radius: 50%;
+            width: 320px;
+            height: 300px;
+            object-fit: cover;
+            border: 4px solid #007acc;
+        }
+        h1 {
+            font-size: 24px;
+            color: #007acc;
+        }
+        .button {
+            background-color: #007acc;
+            color: white;
+            width: 100%;
+            height: 45px;
+            border-radius: 6px;
+            font-size: 16px;
+            margin-top: 20px;
+            border: none;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #005fa3;
+        }
+        .profile-details {
+            text-align: left;
+            margin-top: 20px;
+        }
+        .profile-details span {
+            font-weight: bold;
+        }
+        .profile-details h3 {
+            display: inline;
+            margin-left: 10px;
+        }
+        .profile-details hr {
+            border: none;
+            border-top: 1px solid #ddd;
+            margin: 15px 0;
+        }
+        .profile-edit input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class='container' id='container'>
+        <div class="header">
+            <h1>DevOps Engineer Profile</h1>
+            <img src='app/images/jerry.jpg' alt="app/images/jerry.jpg">
+        </div>
+        <div class="profile-details">
+            <span>Name:</span> <h3 id='name'>Ahmed Ghanem</h3>
+            <hr />
+            <span>Email:</span> <h3 id='email'>Ahmed@Ghanem.com</h3>
+            <hr />
+            <span>Interests:</span> <h3 id='interests'>DevOps, Cloud Infrastructure, CI/CD</h3>
+            <hr />
+            <button class='button' onclick="updateProfile()">Edit Profile</button>
+        </div>
+    </div>
+
+    <div class='container' id='container-edit' style="display:none;">
+        <div class="header">
+            <h1>Edit DevOps Profile</h1>
+            <img src='app/images/jerry.jpg' alt="app/images/jerry.jpg">
+        </div>
+        <div class="profile-edit">
+            <label for='input-name'>Name:</label>
+            <input type="text" id='input-name' value='Ahmed Ghanem' />
+            <hr />
+            <label for='input-email'>Email:</label>
+            <input type="email" id='input-email' value='Ahmed@Ghanem.com' />
+            <hr />
+            <label for='input-interests'>Interests:</label>
+            <input type="text" id='input-interests' value='DevOps, Cloud Infrastructure, CI/CD' />
+            <hr />
+            <button class='button' onclick="handleUpdateProfileRequest()">Update Profile</button>
+        </div>
+    </div>
+
+    <script>
+        // Fetch user profile data
+        (async function init() {
+            const response = await fetch('http://localhost:3000/get-profile');
+            const user = await response.json();
+
+            document.getElementById('name').textContent = user.name || 'Ahmed Ghanem';
+            document.getElementById('email').textContent = user.email || 'Ahmed@Ghanem.com';
+            document.getElementById('interests').textContent = user.interests || 'DevOps, Cloud Infrastructure, CI/CD';
+
+            const cont = document.getElementById('container');
+            cont.style.display = 'block';
+        })();
+
+        // Update profile function
+        async function handleUpdateProfileRequest() {
+            const contEdit = document.getElementById('container-edit');
+            const cont = document.getElementById('container');
+
+            const payload = {
+                name: document.getElementById('input-name').value, 
+                email: document.getElementById('input-email').value, 
+                interests: document.getElementById('input-interests').value
+            };
+
+            const response = await fetch('http://localhost:3000/update-profile', {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+            const jsonResponse = await response.json();
+
+            document.getElementById('name').textContent = jsonResponse.name;
+            document.getElementById('email').textContent = jsonResponse.email;
+            document.getElementById('interests').textContent = jsonResponse.interests;
+
+            cont.style.display = 'block';
+            contEdit.style.display = 'none';
+        }
+
+        // Function to toggle between profile view and edit mode
+        function updateProfile() {
+            const contEdit = document.getElementById('container-edit');
+            const cont = document.getElementById('container');
+
+            document.getElementById('input-name').value = document.getElementById('name').textContent;
+            document.getElementById('input-email').value = document.getElementById('email').textContent;
+            document.getElementById('input-interests').value = document.getElementById('interests').textContent;
+
+            cont.style.display = 'none';
+            contEdit.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

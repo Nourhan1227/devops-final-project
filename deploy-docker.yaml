@@ -1,0 +1,80 @@
+
+- name: setup docker with ansible
+  hosts: docker_server
+  become: yes
+
+  tasks:
+    - name: install docker
+      yum:
+        name: docker
+        update_cache: yes
+        state: present
+
+- name: start docker
+  hosts: docker_server
+  become: yes
+  tasks:
+    - name: start docker
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+    - name: add ec2-user to docker group
+      user:
+        name: ec2-user
+        groups: docker
+        append: yes
+
+- name: install nodejs
+  hosts: docker_server
+  become: yes
+  tasks:
+    - name: install nodejs
+      yum:
+        name: nodejs
+        update_cache: yes
+        state: present
+
+- name : install docker-compose
+  hosts: docker_server
+  become: yes
+  tasks:
+    - name: install docker-compose
+      get_url:
+        url: https://github.com/docker/compose/releases/latest/download/docker-compose-Linux-x86_64
+        dest: /usr/local/bin/docker-compose
+        mode: +x
+
+- name: copy docker-compose file
+  hosts: docker_server
+  tasks:
+    - name: copy docker-compose file
+      copy:
+        src: ./mongo.yaml
+        dest: /home/ec2-user/mongo.yaml
+
+- name: copy utility app
+  hosts: docker_server
+  tasks:
+    - name: copy /utility app
+      copy:
+        src: ./utility-app
+        dest: /home/ec2-user/
+
+- name: install aws-cli
+  hosts: docker_server
+  become: yes
+  tasks:
+    - name: install aws-cli
+      yum:
+        name: aws-cli
+        update_cache: yes
+        state: present
+
+- name: deploy docker-compose
+  hosts: docker_server
+  tasks:
+    - name: deploy docker-compose
+      become: true
+      become_user: root
+      command: docker-compose -f /home/ec2-user/mongo.yaml up -d

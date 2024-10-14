@@ -27,9 +27,9 @@ def deployApp() {
     // Use AWS credentials
     withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'jenkins-aws-access']]) {
         // Set kubeconfig environment variable
-        withCredentials([file(credentialsId: 'your-kubeconfig-id', variable: 'KUBECONFIG_FILE')]) {
-            // Set the KUBECONFIG environment variable
-            sh 'export KUBECONFIG=$KUBECONFIG_FILE'
+        // withCredentials([file(credentialsId: 'your-kubeconfig-id', variable: 'KUBECONFIG_FILE')]) {
+        //     // Set the KUBECONFIG environment variable
+        //     sh 'export KUBECONFIG=$KUBECONFIG_FILE'
 
             // Change to the directory containing your deployment and service files
             dir('/home/nour/depi/Final-DEPI-Project/') {

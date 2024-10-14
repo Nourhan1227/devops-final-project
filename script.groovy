@@ -32,10 +32,10 @@ def deployApp() {
         //     sh 'export KUBECONFIG=$KUBECONFIG_FILE'
 
         // Change to the directory containing your deployment and service files
-        dir('/home/nour/depi/Final-DEPI-Project/') {
-            sh 'kubectl apply -f deployment.yaml'
-            sh 'kubectl apply -f service.yaml'
-        }
+        // dir('/home/nour/depi/Final-DEPI-Project/') {
+        //     sh 'kubectl apply -f deployment.yaml'
+        //     sh 'kubectl apply -f service.yaml'
+        // }
         // } // Uncomment this closing bracket if you are using a kubeconfig file
     // }
 }

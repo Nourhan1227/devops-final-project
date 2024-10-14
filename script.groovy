@@ -24,20 +24,20 @@ def buildImage() {
 def deployApp() {
     echo "Deploying the application to EKS..."
 
-    // Use AWS credentials
-    // withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'jenkins-aws-access']]) {
-        // Uncomment if you have a kubeconfig file
-        // withCredentials([file(credentialsId: 'your-kubeconfig-id', variable: 'KUBECONFIG_FILE')]) {
-        //     // Set the KUBECONFIG environment variable
-        //     sh 'export KUBECONFIG=$KUBECONFIG_FILE'
+    Use AWS credentials
+    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'jenkins-aws-access']]) {
+        //Uncomment if you have a kubeconfig file
+        withCredentials([file(credentialsId: 'your-kubeconfig-id', variable: 'KUBECONFIG_FILE')]) {
+            // Set the KUBECONFIG environment variable
+            sh 'export KUBECONFIG=$KUBECONFIG_FILE'
 
-        // Change to the directory containing your deployment and service files
-        // dir('/home/nour/depi/Final-DEPI-Project/') {
-        //     sh 'kubectl apply -f deployment.yaml'
-        //     sh 'kubectl apply -f service.yaml'
-        // }
-        // } // Uncomment this closing bracket if you are using a kubeconfig file
-    // }
+        Change to the directory containing your deployment and service files
+        dir('/home/nour/depi/Final-DEPI-Project/') {
+            sh 'kubectl apply -f deployment.yaml'
+            sh 'kubectl apply -f service.yaml'
+        }
+        } // Uncomment this closing bracket if you are using a kubeconfig file
+    }
 }
 
 return this
